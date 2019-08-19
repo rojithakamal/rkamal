@@ -24,10 +24,9 @@ logger = logging.getLogger(__name__)
 # Specify the URL to your package here.
 # This URL must be accessible via pip install
 #PACKAGE_URL = 'git+https://github.com/madendorff/functions@'
-PACKAGE_URL = 'git+https://github.com/fe01134/fun-bi@'
+PACKAGE_URL = 'git+https://github.com/kkbankol-ibm/fun-bi@'
 
-
-class BIAssetHTTPPreload(BasePreload):
+class TAssetHTTPPreload(BasePreload):
     '''
     Do a HTTP request as a preload activity. Load results of the get into the Entity Type time series table.
     HTTP request is experimental
