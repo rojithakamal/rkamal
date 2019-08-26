@@ -70,12 +70,19 @@ except Exception as ex:
 try:
     #  Credentials
     print("Environment Variables Building Insights Loading")
-    BI_USERNAME = os.environ.get("BI_USERNAME")
-    print(BI_USERNAME)
-    BI_PASSWORD = os.environ.get("BI_PASSWORD")
-    print(BI_PASSWORD)
-    BI_TENANT_ID = os.environ.get("BI_TENANT_ID")
-    print(BI_TENANT_ID)
+    USERNAME = os.environ.get("USERNAME")
+    print(USERNAME)
+    PASSWORD = os.environ.get("PASSWORD")
+    print(PASSWORD)
+    TENANT_ID = os.environ.get("TENANT_ID")
+    print(TENANT_ID)
+    TABLE_NAME = os.environ.get("TABLE_NAME")
+    print(TABLE_NAME)
+    DB_SCHEMA = os.environ.get("DB_SCHEMA")
+    print(DB_SCHEMA)
+    ENTITY_NAME = os.environ.get("ENTITY_NAME")
+    print(ENTITY_NAME)
+    URL = os.environ.get("URL")
     print("Environment Variables Loaded Successfully")
 
 except Exception as ex:

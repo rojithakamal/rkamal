@@ -1,0 +1,32 @@
+{
+    "cards": [
+        {
+            "content": {
+                "series": [
+                    {
+                        "dataSourceId": "energy_value",
+                        "label": "Energy Usage MWh"
+                    }
+                ]
+            },
+            "dataSource": {
+              "range": {
+                    "count": -30,
+                    "interval": "day"
+                },
+                "attributes":[
+                {
+                    "attribute": "energy_value",
+                    "id": "energy_value",
+                    "aggregator": "mean"
+                }
+              ]
+            },
+            "id": "energy_value_line",
+            "size": "LARGE",
+            "title": "Energy Usage",
+            "type": "TIMESERIES"
+        }
+    ],
+    "title": "Building Summary"
+}

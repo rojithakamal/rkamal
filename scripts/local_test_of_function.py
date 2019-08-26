@@ -2,21 +2,21 @@ import json
 import logging
 from sqlalchemy import Column, Integer, String, Float, DateTime, Boolean, func
 from iotfunctions import bif
-from custom.functions import BIAssetHTTPPreload
+from custom.functions import MaximoAssetHTTPPreload
 from iotfunctions.metadata import EntityType
 from iotfunctions.db import Database
-from iotfunctions.enginelog import EngineLogging
+#from iotfunctions.enginelog import EngineLogging
 from custom import settings
 
-EngineLogging.configure_console_logging(logging.DEBUG)
+#EngineLogging.configure_console_logging(logging.DEBUG)
 
 '''
 # Replace with a credentials dictionary or provide a credentials
 # Explore > Usage > Watson IOT Platform Analytics > Copy to clipboard
 # Past contents in a json file.
 '''
-with open('credentials_staging.json', encoding='utf-8') as F:
-#with open('credentials.json', encoding='utf-8') as F:
+#with open('credentials_staging.json', encoding='utf-8') as F:
+with open('credentials.json', encoding='utf-8') as F:
 #with open('credentials_dev.json', encoding='utf-8') as F:
     credentials = json.loads(F.read())
 
@@ -39,8 +39,8 @@ To do anything with IoT Platform Analytics, you will need one or more entity typ
 You can create entity types through the IoT Platform or using the python API as shown below.
 The database schema is only needed if you are not using the default schema. You can also rename the timestamp.
 '''
-entity_name = 'Buildings'
-db_schema = None  # replace if you are not using the default schema
+entity_name = 'kalbuildings'
+db_schema = "BLUADMIN" # None  # replace if you are not using the default schema
 db.drop_table(entity_name, schema = db_schema)
 
 # Credentials to access Building Insights API.
@@ -53,19 +53,24 @@ print(BI_USERNAME)
 print(BI_PASSWORD)
 print(BI_TENANT_ID)
 
-entity = EntityType(entity_name,db,
+entity = EntityType(entity_name, db,
+                    # following columns can be dynamically generated based on meters associated with each asset
                     Column('building',String(50)),
                     Column('energy_value',Float()),
-                    Column('energy_compare_percent', Float()),
                     Column('energy_unit',String(50)),
-                    Column('energy_trend',String(50)),
-                    Column('energy_trend_status',String(50)),
-                    BIAssetHTTPPreload( username = BI_USERNAME,
+                    Column('temperature',Float()),
+                    Column('temperature_unit',String(50)),
+                    # Column('energy_value',Float()),
+                    # Column('energy_compare_percent', Float()),
+                    # Column('energy_unit',String(50)),
+                    # Column('energy_trend',String(50)),
+                    # Column('energy_trend_status',String(50)),
+                    MaximoAssetHTTPPreload( username = BI_USERNAME,
                                     password = BI_PASSWORD,
                                     request='GET',
                                     url=BI_TENANT_ID,
                                     output_item = 'http_preload_done'),
-                    bif.PythonExpression(expression='df["energy_value"]*df["energy_compare_percent"]',
+                    bif.PythonExpression(expression='df["energy_value"]*df["energy_value"]',
                                          output_name = 'volume'),
                     **{
                       '_timestamp' : 'evt_timestamp',
@@ -82,7 +87,7 @@ To also register the functions and constants associated with the entity type, sp
 'publish_kpis' = True.
 '''
 entity.register(raise_error=False)
-db.register_functions([BIAssetHTTPPreload])
+db.register_functions([MaximoAssetHTTPPreload])
 
 '''
 To test the execution of kpi calculations defined for the entity type locally
@@ -97,8 +102,20 @@ entity.exec_local_pipeline()
 '''
 view entity data
 '''
-df = db.read_table(table_name=entity_name, schema=db_schema)
+# can get entity metadata with following
+#
+# TODO, for some reason this returns data but also throws exception.
+'''
+meta = db.get_entity_type(entity_name)
+db_schema = meta['schemaName']
+table_name = meta['metricTableName']
+'''
+db_schema = "BLUADMIN"
+table_name = "kalbuildings"
+
+df = db.read_table(table_name=table_name, schema=db_schema)
+# df = db.read_table(table_name=entity_name, schema=db_schema)
 print(df.head())
 
 
-print ( 'Done registering  entity %s '  %db.register_functions([BIAssetHTTPPreload]) )
+print ( 'Done registering  entity %s '  %db.register_functions([MaximoAssetHTTPPreload]) )
