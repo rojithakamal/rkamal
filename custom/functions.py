@@ -25,9 +25,9 @@ logger = logging.getLogger(__name__)
 # Specify the URL to your package here.
 # This URL must be accessible via pip install
 #PACKAGE_URL = 'git+https://github.com/madendorff/functions@'
-PACKAGE_URL = 'git+https://github.com/kkbankol-ibm/fun-bi@'
+PACKAGE_URL = 'git+https://github.com/kkbankol-ibm/watson-analytics-dashboard@'
 
-class MaximoAssetHTTPPreload(BasePreload):
+class MaximoAssetHTTP(BasePreload):
     '''
     Do a HTTP request as a preload activity. Load results of the get into the Entity Type time series table.
     HTTP request is experimental
@@ -64,8 +64,10 @@ class MaximoAssetHTTPPreload(BasePreload):
 
         self.template_id = "building"
         # TODO, user needs to set this initially
-        self.realm = False
+        self.realm = True
         self.realm_token = None
+        self.realm_user = "betauser"
+        self.realm_pass = "betauser"
 
         self.body = body
         logging.debug('body %s' %body)
