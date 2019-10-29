@@ -1,27 +1,27 @@
-# Monitoring IOT Asset Data in Dashboards using Python
+# Monitoring IoT Asset Data in "Maximo Asset Monitor" using Python
 
-In this Code Pattern we will show how to publish IOT Asset Data from external sources (TRIRIGA Building Insights, Maximo) into the Watson IOT Analytics service.  The data will allow us to then monitor individual building energy consumption and compare the performance of different buildings. The monitoring dashboards allow us to visualize energy consumption trends over time.  This HTTP preload function could easily be modified to integrate to other IOT Platforms or data sources to allow you to quickly monitor your assets.
+In this Code Pattern we will show how to publish IOT Asset Data from external sources (Maximo) into the Watson IOT Analytics service.  The data will allow us to then monitor individual building energy consumption and compare the performance of different buildings. The monitoring dashboards allow us to visualize energy consumption trends over time.  This HTTP preload function could easily be modified to integrate to other IOT Platforms or data sources to allow you to quickly monitor your assets.
 
 When the reader has completed this Code Pattern, they will understand how to:
 
 * Understand how this Python function can load data into  [Watson IOT Platform Analytics](https://www.ibm.com/support/knowledgecenter/en/SSQP8H/iot/analytics/as_overview.html) from any REST Service
-* Build a dashboard using [Watson IOT Platform Monitoring Dashboard](https://www.ibm.com/support/knowledgecenter/en/SSQP8H/iot/analytics/as_overview.html) to monitor, visualize, and analyze IOT asset data from external sources
+* Build a dashboard using [Maximo Asset Monitor](https://www.ibm.com/support/knowledgecenter/SSQP8H/iot/monitor/index.html) to monitor, visualize, and analyze IOT asset data from external sources
 <!-- [IBM TRIRIGA Building Insights](https://www.ibm.com/support/knowledgecenter/en/SSQP8H/iot/analytics/as_overview.html) -->
 * Deploy, schedule and run these Python Functions in [Watson IOT Platform Analytics](https://www.ibm.com/support/knowledgecenter/en/SSQP8H/iot/analytics/as_overview.html) to retrieve data from Building Insights every 5 minutes.
 <!-- * Define Assets in -->
 
-The intended audience for this Code Pattern is application developers and other stakeholders who wish to utilize the power of Watson IOT Platform Monitoring Dashboard to quickly and effectively monitor any asset to ensure availability, utilization and efficiency.
+The intended audience for this Code Pattern is application developers and other stakeholders who wish to utilize the power of Maximo Asset Monitor to quickly and effectively monitor any asset to ensure availability, utilization and efficiency.
 
 <!-- ![architecture](./images/architecture.png) -->
 <img src="https://developer.ibm.com/developer/patterns/visualizing-iot-data-in-dashboards-using-python/images/visualizing-iot-data-in-dashboards-using-python.png">
 
 #  Components
 
-* [Watson IOT Platform Analytics](https://www.ibm.com/support/knowledgecenter/en/SSQP8H/iot/analytics/as_overview.html).   Sign up for an account [here](https://www.ibm.com/us-en/marketplace/internet-of-things-cloud/purchase)  An IBM Software as A Service that allows you to register devices, collect IOT Data and build IOT applications.
+* [Watson IOT Platform Analytics](https://www.ibm.com/support/knowledgecenter/en/SSQP8H/iot/analytics/as_overview.html). Sign up for an account [here](https://www.ibm.com/us-en/marketplace/internet-of-things-cloud/purchase)  This is a SaaS offering that allows you to register devices, collect IOT Data and build IOT applications.
 
 <!-- * [Building Insights](https://jupyter.org/):An IBM Software as A Service that allows you to manage your buildings. By using AI, Contextual Models, IoT and other sensor data, IBM TRIRIGA Building Insights consolidates, stores, and analyzes your data in real time, seamlessly improving building operations and giving you unique insights.   -->
 
-* [Maximo](https://www.ibm.com/products/maximo).   Sign up for a free trial [here](https://www.ibm.com/account/reg/us-en/signup?formid=urx-20869)  An IBM SAAS offering that allows you to manage assets.
+* [Maximo](https://www.ibm.com/products/maximo). Sign up for a free trial [here](https://www.ibm.com/account/reg/us-en/signup?formid=urx-20869)  An IBM SAAS offering that allows you to manage assets.
 
 <!-- * [Monitoring Dashboard]() Code free dashboards that allow you to monitor a variety of types of assets.  Use out of the box cards to visualize timeseries data and other asset properties. -->
 
@@ -39,7 +39,7 @@ The intended audience for this Code Pattern is application developers and other 
 
 # Prerequisites
 
-* An account on IBM Marketplace that has access to Watson IOT Platform Analytics [here](https://www.ibm.com/us-en/marketplace/internet-of-things-cloud/purchase)
+* An account on IBM Marketplace that has access to Watson IOT Platform Analytics and Maximo Asset Monitor. This service can be provisioned [here](https://www.ibm.com/us-en/marketplace/internet-of-things-cloud/purchase)
 
 # Steps
 
@@ -111,10 +111,13 @@ cd watson-analytics-dashboard
 # Install dependencies
 pip install numpy
 pip install sqlalchemy pandas ibm_db_sa urllib3 requests lxml sklearn ibm_db python-dotenv future
-pip install -r requirements.txt
 
 # Install Watson IOT Functions
 pip install git+https://github.com/ibm-watson-iot/functions.git@production --upgrade
+
+pip install -r requirements.txt
+
+
 ```
 
 <!-- * Apply fix for DYLD (OS X only)
@@ -154,9 +157,9 @@ Explore > Usage > Watson IOT Platform Analytics > Copy to clipboard
 ```
 ![credentials](./images/watson_iot_credentials.png)
 
-* Modify your .custom/functions.py to reflect your PACKAGE_URL to reflect your forked function Github repository:
+If you've created a custom fork of this repo, modify your .custom/functions.py to set your PACKAGE_URL as the forked Github repository:
 ```
-PACKAGE_URL = 'git+https://github.com/fe01134/fun-bi@'
+PACKAGE_URL = 'git+https://github.com/kkbankol-ibm/watson-analytics-dashboard@'
 
 # Change the class name if someone else has already published a function with the same name in your tenant function catalog.
 
@@ -235,7 +238,7 @@ Then, click the gear in the top right > Manage dashboards
 Next, click "Import"
 ![](./images/importdashboard.png)
 
-Select the file in the json directory of this project `./json/dasboardBuildingMaximo.json`
+Select the file in the json directory of this project `./json/dashboardBuildingMaximo.json`
 
 Click "Save"
 <!-- * Import the dashboard layout file
