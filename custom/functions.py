@@ -2,6 +2,8 @@ import inspect
 import logging
 import datetime as dt
 import math
+
+from iotfunctions.ui import UIExpression, UIFunctionOutSingle
 from sqlalchemy.sql.sqltypes import TIMESTAMP,VARCHAR
 import numpy as np
 import pandas as pd
@@ -10,7 +12,7 @@ import base64
 import requests
 
 #from iotfunctions.base import BaseTransformer
-from iotfunctions.base import BasePreload
+from iotfunctions.base import BasePreload, BaseTransformer
 from iotfunctions import ui
 from iotfunctions.db import Database
 from iotfunctions import bif
@@ -27,7 +29,7 @@ logger = logging.getLogger(__name__)
 #PACKAGE_URL = 'git+https://github.com/madendorff/functions@'
 PACKAGE_URL = 'git+https://github.com/rojithakamal/rkamal'
 
-class MaximoAssetHTTP(BasePreload):
+class MaximoAssetHTTPPreloadMds05(BasePreload):
     '''
     Do a HTTP request as a preload activity. Load results of the get into the Entity Type time series table.
     HTTP request is experimental
@@ -62,12 +64,14 @@ class MaximoAssetHTTP(BasePreload):
         self.headers = headers
         logging.debug('headers %s' %headers)
 
-        self.template_id = "building"
-        # TODO, user needs to set this initially
-        self.realm = True
+        self.template_id = "1000AB"
+        self.siteid="BEDFORD"
+
+        # TODO, user needs to set this initially if realm gateway is enabled
+        self.realm = False
         self.realm_token = None
-        self.realm_user = "betauser"
-        self.realm_pass = "betauser"
+        self.realm_user = "<realm_user>"
+        self.realm_pass = "<realm_pass>"
 
         self.body = body
         logging.debug('body %s' %body)
@@ -222,7 +226,7 @@ class MaximoAssetHTTP(BasePreload):
         # /os/mxasset?oslc.where=assettype="VAN"
         # TODO, the following call seems to work better
         buildings = []
-        q_endpoint = self.url + "/maxrest/rest/mbo/ASSET/?TEMPLATEID=" + self.template_id + "&_lid=" + self.username + "&_lpwd=" + self.password + "&_format=json" # &siteid=DENVER
+        q_endpoint = self.url + "/maxrest/rest/mbo/ASSET/?_lid=" + self.username + "&_lpwd=" + self.password + "&ASSETNUM="+self.template_id+"&siteid=BEDFORD&_format=json"
         # headers = { "maxauth": self.token }
         headers = { "maxauth": self.token }
         print("q_endpoint")
@@ -340,7 +344,7 @@ class MaximoAssetHTTP(BasePreload):
             # measureunitids = np.array([m['spi:measureunitid'] for m in meters if 'spi:measureunitid' in m.keys() ])
             for m in meters:
                 # TODO, all meters will likely not be updated at the same freqency
-                if "TEMP" in m['spi:metername']:
+                if "RUNHOURS" in m['spi:metername']:
                     print("Temp found for building: " + b)
                     # if 'spi:measureunitid' in m.keys():
                     #     ids.append(m['spi:measureunitid'])
@@ -487,7 +491,8 @@ class MaximoAssetHTTP(BasePreload):
         outputs=[]
         outputs.append(ui.UIStatusFlag(name='output_item'))
         return (inputs, outputs)
-class customIfThenElse(BaseTransformer):
+
+class eSolcustomIfThenElse(BaseTransformer):
     """
     Set the value of the output_item based on a conditional expression.
     When the conditional expression returns a True value, return the value of the true_expression.
