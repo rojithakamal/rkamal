@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 #PACKAGE_URL = 'git+https://github.com/madendorff/functions@'
 PACKAGE_URL = 'git+https://github.com/rojithakamal/rkamal'
 
-class MaximoAssetHTTPPreloadMds05(BasePreload):
+class MaximoAssetHTTPPreloadrkm(BasePreload):
     '''
     Do a HTTP request as a preload activity. Load results of the get into the Entity Type time series table.
     HTTP request is experimental
@@ -91,7 +91,7 @@ class MaximoAssetHTTPPreloadMds05(BasePreload):
     def getMeters (self, asset_id = None):
         # hardcoding id for test TODO
         # asset_id = "2112"
-        q_endpoint = self.url + "/maximo/oslc/os/mxasset?oslc.select=assetmeter&oslc.where=assetnum=" + asset_id
+        q_endpoint = self.url + "/oslc/os/mxasset?oslc.select=assetmeter&oslc.where=assetnum="+"\"1000AB\""
         headers = { "maxauth": self.token }
         res = requests.get(q_endpoint, headers=headers, cookies=self.cookies)
         meters = []
@@ -299,9 +299,12 @@ class MaximoAssetHTTPPreloadMds05(BasePreload):
             logging.debug("no realm auth requested")
             self.cookies = dict()
 
-        buildings = self.getBuildings()
-        for building in buildings:
-            logging.debug('building name %s' %building )
+        #buildings = self.getBuildings()
+        tmpassetnum = "1000AB"
+        buildings = []
+        buildings.append(tmpassetnum)
+        #for building in buildings:
+          #  logging.debug('building name %s' %building )
 
         # Column('building',String(50)),
         # Column('energy_value',Float()),
